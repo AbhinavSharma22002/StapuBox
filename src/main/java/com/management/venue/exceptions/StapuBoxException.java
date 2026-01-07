@@ -14,7 +14,7 @@ public class StapuBoxException extends RuntimeException {
         this.specificCause = cause;
     }
 
-    @SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
     public <T extends Throwable> T getSpecificCause() {
         return (T) specificCause;
     }

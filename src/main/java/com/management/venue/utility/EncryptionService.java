@@ -17,7 +17,7 @@ public class EncryptionService {
 	@Value("${stapu.encryption.algorithm:AES}")
 	private String algorithm;
 
-	public String encode(String data) {
+	public String encode(String data) throws RuntimeException {
 		try {
 			SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), algorithm);
 			Cipher cipher = Cipher.getInstance(algorithm);
@@ -29,7 +29,7 @@ public class EncryptionService {
 		}
 	}
 
-	public String decode(String encodedData) {
+	public String decode(String encodedData) throws RuntimeException {
 		try {
 			SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), algorithm);
 			Cipher cipher = Cipher.getInstance(algorithm);
