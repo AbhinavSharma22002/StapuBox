@@ -1,6 +1,20 @@
 # Venue Management System
 
-A production-ready Spring Boot application designed to manage sports venues, time slots, and bookings. This system focuses on high-concurrency handling, data integrity, and seamless deployment via Docker.
+A production-ready Spring Boot application for managing sports venues and bookings. This project features high-concurrency protection, ID encryption, and a modern Java 25 environment.
+
+---
+
+## 🛠 Tech Stack & Versions ##
+
+-   **Java: 25**
+
+-   **Spring Boot: 3.4.1**
+
+-   **Database: MySQL 8.0**
+
+-   **Build Tool: Maven 3.9**
+
+-   **Containerization: Docker & Docker Compose**
 
 ---
 
@@ -9,13 +23,14 @@ A production-ready Spring Boot application designed to manage sports venues, tim
 The entire stack is containerized. You do not need to install MySQL or Maven locally.
 
 1. **Prerequisites:** Install [Docker Desktop](https://www.docker.com/products/docker-desktop/).
-2. **Launch:** Run the following command in the project root:
+2. **Stop any local MySQL services running on port 3306.**
+3. **Launch:** Run the following command in the project root:
    ```bash
    docker-compose up --build
 
-3. **Verify:** Once the logs show "Started VenueApplication," access the health check:http://localhost:8080/actuator/health
+4. **Verify:** Once the logs show "Started VenueApplication," access the health check:http://localhost:8080/actuator/health
 
-## ##
+---
 
 ## 🛠 Technical Implementation (Rubric Highlights)
 
@@ -48,7 +63,8 @@ This project is built with a focus on **Production Readiness** and follows stand
 
     - **POST /api/bookings**
 
-## ##
+---
+
 ## ⚙️ Profile Management##
 
 The application uses Spring Profiles to separate environments:
@@ -58,13 +74,17 @@ Profile|Target Environment|Database Host|Trigger
 dev|Local IDE Development|localhost|-Dspring.profiles.active=dev
 docker|Containerized Stack|db (Docker DNS)|Automatic via docker-compose
 
-## ##
+---
 
-## 📋 Mandatory API Endpoints ##
+## 📋 API Endpoints ##
 
 **Venues**
 
 -   **POST /api/venues**: Create/Update a venue.
+
+-   **GET /api/venues**: Fetch all venues.
+
+-   **POST /api/venues/delete-venue**: Delete a venue.
 
 -   **GET /api/venues/available**: Search available venues by sport and time range (supports optional filters).
 
@@ -74,7 +94,11 @@ docker|Containerized Stack|db (Docker DNS)|Automatic via docker-compose
 **Bookings**
 -   **POST /api/bookings**: Book an available slot. Returns 409 Conflict if the slot is already taken.
 
-## ##
+-   **GET /api/bookings**: To fetch a specific booking.
+
+-   **POST /api/bookings/{id}/cancel**: Cancel a specific booking.
+
+---
 
 ## 📦 Docker Configuration ##
 
@@ -82,15 +106,19 @@ docker|Containerized Stack|db (Docker DNS)|Automatic via docker-compose
 
 -   **Orchestration**: docker-compose.yml manages the network and uses a healthcheck on the MySQL container to ensure the database is ready before the application starts.
 
-## ##
+---
 
 ## 💡 Key Design Patterns Used ##
 
 -   **Data Transfer Objects (DTO)**: Decouples the API layer from the Database layer.
 -   **Converters**: Specialized components to transform Entities to DTOs and vice-versa.
 -   **Global Exception Handling**: Centralized @ControllerAdvice for consistent error responses and HTTP status codes.
+-   **External API**: The system assumes the **StapuBox** Official API is reachable to validate sportId. If the API is down, venue creation will fail with a 503 error.
+-   **Timezones**: All booking times are processed and stored in UTC to avoid daylight savings conflicts.
+-   **Concurrency**: We assume high traffic; therefore, Optimistic Locking is active on all Slot entities.
+-   **ID Masking**: Users never see raw Long IDs. All pk fields in JSON are Base64 encrypted strings.
 
-## ##
+---
 
 ## ✅ Implementation Highlights ##
 This project successfully implements all mandatory requirements:
@@ -107,4 +135,4 @@ This project successfully implements all mandatory requirements:
 
 -   **Environment Awareness**: Profile-based configuration (**dev** vs **docker**).
 
-## ##
+---

@@ -1,15 +1,21 @@
-# Stage 1: Build the JAR
-FROM maven:3.9.6-eclipse-temurin-17 AS build
+# Stage 1: Build using Java 25
+FROM eclipse-temurin:25-jdk AS build
 WORKDIR /app
+
+# Install Maven manually in the Java 25 environment
+RUN apt-get update && apt-get install -y maven
+
 COPY pom.xml .
+RUN mvn dependency:go-offline
+
 COPY src ./src
-# Build the application and skip tests for faster deployment
+# Build the JAR
 RUN mvn clean package -DskipTests
 
-# Stage 2: Create the final lightweight image
-FROM eclipse-temurin:17-jre-jammy
+# Stage 2: Runtime using Java 25
+FROM eclipse-temurin:25-jre
 WORKDIR /app
-# Copy only the built JAR from the first stage
 COPY --from=build /app/target/*.jar app.jar
+
 EXPOSE 8080
 ENTRYPOINT ["java", "-jar", "app.jar"]
