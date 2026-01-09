@@ -1,0 +1,325 @@
+{
+	"info": {
+		"_postman_id": "e08391ea-bed2-415b-871c-e61990eed0ad",
+		"name": "StapuBox",
+		"description": "# 📡 StapuBox API Postman Documentation\n\nThis documentation outlines the endpoints available in the **StapuBox** collection. All endpoints use `http://localhost:8080` as the base URL.\n\n## 🏟 Venue Management\n\n### 1\\. Fetch All Venues\n\n- **Method:** `GET`\n- **Endpoint:** `/api/venues`\n- **Description:** Retrieves a list of all registered venues.\n    \n\n### 2\\. Create / Update Venue\n\n- **Method:** `POST`\n- **Endpoint:** `/api/venues/upsert-venue`\n- JSON{ \"venueName\": \"GTS23\", \"sportId\": \"7031809\"}\n    \n\n### 3\\. Delete a Venue\n\n- **Method:** `POST`\n- **Endpoint:** `/api/venues/delete-venue`\n- JSON{ \"pk\": \"Kp0jkQZme5\"}\n    \n\n---\n\n## 🕒 Time Slot Management\n\n### 1\\. Add Time Slot for Venue\n\n- **Method:** `POST`\n- **Endpoint:** `/api/venues/{venuePk}/slots`\n- **Description:** Adds a booking window to a specific venue using its encrypted PK (e.g., `OL0WNXoQ82`).\n- JSON{ \"startTime\": \"2026-01-09 13:03:39\", \"endTime\": \"2026-01-19 13:03:39\"}\n    \n\n### 2\\. Search Available Venues\n\n- **Method:** `GET`\n- **Endpoint:** `/api/venues/available`\n- **Description:** Finds available slots based on time range and sport category.\n- JSON{ \"startTime\": \"2026-01-09 13:03:39\", \"endTime\": \"2026-01-25 13:03:39\", \"venue\": { \"sportId\": \"7031809\" }}\n    \n\n---\n\n## 🎫 Booking Logic\n\n### 1\\. Book a Slot\n\n- **Method:** `POST`\n- **Endpoint:** `/api/bookings`\n- **Description:** Reserves a specific time slot using its encrypted PK.\n- JSON{ \"pk\": \"OGrWalZp2M\"}\n    \n\n### 2\\. Cancel a Booking\n\n- **Method:** `PUT`\n- **Endpoint:** `/api/bookings/{bookingPk}/cancel`\n- **Description:** Cancels an existing booking by its PK.\n    \n\n---\n\n## 🩺 System Monitoring\n\n### 1\\. Actuator Health Check\n\n- **Method:** `GET`\n- **Endpoint:** `/actuator/health`\n- **Description:** Checks the application's overall health and database connection status.\n    \n\n---\n\n### **How to Use This Documentation**\n\n1. Ensure your application is running via `docker-compose up`.\n2. Import the `StapuBox.postman_collection.json` file directly into Postman.\n3. Ensure the Content-Type header is set to `application/json` for all POST/PUT requests.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17082015"
+	},
+	"item": [
+		{
+			"name": "Fetch All Venues",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/venues",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"venues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch a Venue",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"pk\":\"LlVjbNjkYz\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/venues",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"venues"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete a Venue",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"pk\": \"Kp0jkQZme5\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/venues/delete-venue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"venues",
+						"delete-venue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Venue",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"venueName\":\"GTS23\",\r\n\"sportId\":\"7031809\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/venues/upsert-venue",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"venues",
+						"upsert-venue"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Book a Slot",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"pk\":\"OGrWalZp2M\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/bookings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Cancel a slot",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/bookings/O58Ze2Wnxg/cancel",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bookings",
+						"O58Ze2Wnxg",
+						"cancel"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Time Slot for Venue",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"startTime\":\"2026-01-09 13:03:39\",\r\n\"endTime\":\"2026-01-19 13:03:39\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/venues/OL0WNXoQ82/slots",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"venues",
+						"OL0WNXoQ82",
+						"slots"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Fetch available venues for a given time range & sport",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"startTime\": \"2026-01-09 13:03:39\",\r\n    \"endTime\": \"2026-01-25 13:03:39\",\r\n    \"venue\": {\r\n        \"sportId\": \"7031809\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/venues/available",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"venues",
+						"available"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View a booking",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8080/api/bookings/O58Ze2Wnxg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"bookings",
+						"O58Ze2Wnxg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Actuator Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/actuator/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"actuator",
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
