@@ -29,9 +29,9 @@ public class SportDataServiceImpl extends BaseLogger implements SportDataService
 
 		if (!isValid) {
 			log.error("Validation Failed: Sport code {} is not in the official list", sportId);
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	private void refreshSportsCache() {

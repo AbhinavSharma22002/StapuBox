@@ -44,6 +44,12 @@ public class BookingServiceImpl extends BaseLogger implements BookingService {
 
 		if (slot == null)
 			throw new StapuBoxException("Slot not found", "404", null);
+		
+		// Check Availability (Prevents double booking at the logic level)
+	    if (!slot.isAvailable()) {
+	        log.warn("Booking Attempt Failed: Slot {} is already booked.", slot.getPk());
+	        throw new StapuBoxException("This slot has already been booked by another user.", "409", null);
+	    }
 
 		// 1. Update Slot Availability
 		slot.setAvailable(false);

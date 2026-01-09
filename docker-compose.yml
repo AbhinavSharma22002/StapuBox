@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: venue-mysql-db
+    environment:
+      MYSQL_DATABASE: sports_venue_db
+      MYSQL_ROOT_PASSWORD: root
+    # Healthcheck ensures the DB is actually accepting connections
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "3306:3306"
+
+  app:
+    build: .
+    container_name: venue-spring-app
+    ports:
+      - "8080:8080"
+    # This prevents the app from starting until the DB is healthy
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/sports_venue_db?allowPublicKeyRetrieval=true&useSSL=false
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # Include any other env variables like your encryption secret
+      STAPU_ENCRYPTION_SECRET-KEY: your_secret_key

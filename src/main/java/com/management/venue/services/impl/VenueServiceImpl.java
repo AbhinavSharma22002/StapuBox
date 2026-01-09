@@ -1,7 +1,5 @@
 package com.management.venue.services.impl;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +10,6 @@ import org.springframework.util.CollectionUtils;
 import com.management.venue.converters.services.Converter;
 import com.management.venue.entites.Venue;
 import com.management.venue.logger.BaseLogger;
-import com.management.venue.pojo.TimeSlotData;
 import com.management.venue.pojo.VenueData;
 import com.management.venue.repositories.VenueRepository;
 import com.management.venue.services.VenueService;
@@ -22,8 +19,6 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class VenueServiceImpl extends BaseLogger implements VenueService {
-
-	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
 	@Autowired
 	private VenueRepository venueRepo;
@@ -61,15 +56,5 @@ public class VenueServiceImpl extends BaseLogger implements VenueService {
 	@Transactional
 	public void removeVenue(String pk) {
 		venueRepo.delete(Long.valueOf(encryptionService.decode(pk)));
-	}
-	
-	@Override
-	public List<VenueData> getAvailableVenues(TimeSlotData slotData) {
-		return venueRepo
-				.findAvailableVenues(slotData.getVenue().getSportId(),
-						LocalDateTime.parse(slotData.getStartTime(), formatter),
-						LocalDateTime.parse(slotData.getStartTime(), formatter))
-				.stream().map(v -> venueDataConverter.convert(v, null, null)).toList();
-
 	}
 }

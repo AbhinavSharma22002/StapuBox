@@ -58,11 +58,6 @@ public class TimeSlotValidationServiceImpl extends BaseLogger implements Generic
             exceptions.add(new ValidationData("endTime", "End time must be after start time"));
         }
 
-        // 4. Venue Association (Mandatory for new slots)
-        if (!isUpdate && (entity.getVenue() == null || StringUtils.isEmpty(entity.getVenue().getPk()))) {
-            exceptions.add(new ValidationData("venue", "Slot must be associated with a valid Venue"));
-        }
-
         return exceptions;
     }
 }

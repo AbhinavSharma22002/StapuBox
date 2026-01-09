@@ -87,7 +87,7 @@ public class VenueController extends BaseLogger {
 	@GetMapping("/available")
 	public ResponseEntity<ResponseData<?>> getAvailableVenues(@RequestBody TimeSlotData slotData) {
 		// Fetch available venues for a given time range & sport.
-		return ResponseEntity.ok(new ResponseData<>(venueService.getAvailableVenues(slotData), "Success", "200"));
+		return ResponseEntity.ok(new ResponseData<>(slotService.getAvailableVenues(slotData), "Success", "200"));
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.management.venue.repositories;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,34 @@ public class TimeSlotRepository extends GenericDaoImpl<TimeSlot> {
 
 	public TimeSlotRepository() {
 		super(TimeSlot.class);
+	}
+	
+
+	public List<TimeSlot> findAvailableVenues(String sportId, LocalDateTime start, LocalDateTime end)
+			throws StapuBoxException {
+		/* Query logic:
+		 1. Matches the sportId
+		 2. Joins with TimeSlot to find records where isAvailable is true
+		 3. Ensures the slot covers the requested time range
+		*/
+		try {
+			// We select the TimeSlot (ts) and FETCH the associated Venue (v)
+	        String jpql = "SELECT ts FROM TimeSlot ts " +
+	                      "JOIN FETCH ts.venue v " +
+	                      "WHERE (:sportId IS NULL OR v.sportId = :sportId) " +
+	                      "AND (:start IS NULL OR ts.startTime >= :start) " +
+	                      "AND (:end IS NULL OR ts.endTime <= :end) " +
+	                      "AND ts.isAvailable = true";
+
+	        return entityManager.createQuery(jpql, TimeSlot.class)
+	                .setParameter("sportId", sportId)
+	                .setParameter("start", start)
+	                .setParameter("end", end)
+	                .getResultList();
+		} catch (Exception e) {
+			log.error("Error finding available time slot {}: {}", entityClass.getSimpleName(), e.getMessage(), e);
+			throw new StapuBoxException("Error finding available time slot", "500", e);
+		}
 	}
 	
 	// Conflict Check Formula: (StartA < EndB) AND (EndA > StartB)
