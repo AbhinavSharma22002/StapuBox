@@ -9,9 +9,12 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "bookings")
+@Table(name = "bookings", uniqueConstraints = {
+	    @UniqueConstraint(columnNames = {"slot_id"})
+	})
 public class Booking extends Primary {
 
 	@Column(unique = true, nullable = false)

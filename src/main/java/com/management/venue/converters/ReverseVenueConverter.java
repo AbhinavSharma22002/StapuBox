@@ -1,11 +1,11 @@
-package com.management.venue.reconverters;
+package com.management.venue.converters;
 
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.management.venue.converters.Converter;
+import com.management.venue.converters.services.Converter;
 import com.management.venue.entites.Venue;
 import com.management.venue.pojo.VenueData;
 import com.management.venue.utility.EncryptionService;

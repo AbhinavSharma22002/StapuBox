@@ -1,4 +1,4 @@
-package com.management.venue.repositories;
+package com.management.venue.repositories.service;
 
 import java.util.List;
 import java.util.Map;
@@ -6,7 +6,7 @@ import java.util.Map;
 import com.management.venue.entites.Primary;
 import com.management.venue.exceptions.StapuBoxException;
 
-public interface GenericRepository<T extends Primary> {
+public interface GenericDaoService<T extends Primary> {
 	
 	T save(T entity) throws StapuBoxException;
 

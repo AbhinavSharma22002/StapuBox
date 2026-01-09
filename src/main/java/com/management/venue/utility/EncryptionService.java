@@ -1,44 +1,58 @@
 package com.management.venue.utility;
 
-import java.util.Base64;
-
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
+import org.hashids.Hashids;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.management.venue.exceptions.StapuBoxException;
+import com.management.venue.logger.BaseLogger;
+
+import jakarta.annotation.PostConstruct;
+
 @Service
-public class EncryptionService {
+public class EncryptionService extends BaseLogger {
 
-	@Value("${stapu.encryption.secret-key:default_secret_16}")
-	private String secretKey;
+    @Value("${stapu.encryption.secret-key}")
+    private String salt;
 
-	@Value("${stapu.encryption.algorithm:AES}")
-	private String algorithm;
+    private final int MIN_HASH_LENGTH = 10;
+    private Hashids hashids;
 
-	public String encode(String data) throws RuntimeException {
-		try {
-			SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), algorithm);
-			Cipher cipher = Cipher.getInstance(algorithm);
-			cipher.init(Cipher.ENCRYPT_MODE, keySpec);
-			byte[] encrypted = cipher.doFinal(data.getBytes());
-			return Base64.getUrlEncoder().encodeToString(encrypted);
-		} catch (Exception e) {
-			throw new RuntimeException("Error while encoding ID", e);
-		}
-	}
+    @PostConstruct
+    public void init() {
+        // Alphanumeric alphabet as requested
+        this.hashids = new Hashids(salt, MIN_HASH_LENGTH, "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890");
+    }
 
-	public String decode(String encodedData) throws RuntimeException {
-		try {
-			SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), algorithm);
-			Cipher cipher = Cipher.getInstance(algorithm);
-			cipher.init(Cipher.DECRYPT_MODE, keySpec);
-			byte[] decodedBytes = Base64.getUrlDecoder().decode(encodedData);
-			byte[] original = cipher.doFinal(decodedBytes);
-			return new String(original);
-		} catch (Exception e) {
-			throw new RuntimeException("Error while decoding ID - Invalid or tampered key", e);
-		}
-	}
+    /**
+     * Encodes a String value (numeric) into an Alphanumeric Hash.
+     * Use this to turn database PKs into "pretty" IDs.
+     */
+    public String encode(String value) {
+        if (value == null || value.isEmpty()) return null;
+        try {
+            long numericValue = Long.parseLong(value);
+            return hashids.encode(numericValue);
+        } catch (NumberFormatException e) {
+            log.error("Failed to encode: Value {} is not a valid number", value);
+            return null; 
+        }
+    }
+
+    /**
+     * Decodes an Alphanumeric Hash back into its original String value.
+     */
+    public String decode(String hash) {
+        if (hash == null || hash.isEmpty()) return null;
+        try {
+            long[] numbers = hashids.decode(hash);
+            if (numbers.length > 0) {
+                return String.valueOf(numbers[0]);
+            }
+            throw new StapuBoxException("Invalid ID format", "400", null);
+        } catch (Exception e) {
+            log.error("Failed to decode hash: {}", hash);
+            throw new StapuBoxException("Failed to decode ID", "400", e);
+        }
+    }
 }

@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.management.venue.converters.services.Converter;
 import com.management.venue.entites.TimeSlot;
 import com.management.venue.entites.Venue;
 import com.management.venue.pojo.TimeSlotData;
@@ -14,7 +15,7 @@ import com.management.venue.pojo.VenueData;
 @Service
 public class TimeSlotDataConverter extends PrimaryDataConverter implements Converter<TimeSlot,TimeSlotData>  {
 	
-	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Autowired
 	private Converter<Venue,VenueData> venueDataConverter;

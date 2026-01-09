@@ -12,6 +12,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Version;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
@@ -20,6 +21,9 @@ public abstract class Primary {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long pk;
+	
+	@Version // for concurrency safety, if two threads try to update the same slot, one will fail with an ObjectOptimisticLockingFailureException.
+    private Integer version= 0;
 
 	@CreatedDate
 	@Column(nullable = false, updatable = false)
@@ -51,6 +55,14 @@ public abstract class Primary {
 
 	public void setModifiedTime(LocalDateTime modifiedTime) {
 		this.modifiedTime = modifiedTime;
+	}
+
+	public Integer getVersion() {
+		return version;
+	}
+
+	public void setVersion(Integer version) {
+		this.version = version;
 	}
 
 }

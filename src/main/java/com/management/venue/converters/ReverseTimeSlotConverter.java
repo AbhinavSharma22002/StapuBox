@@ -1,4 +1,4 @@
-package com.management.venue.reconverters;
+package com.management.venue.converters;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -7,7 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.management.venue.converters.Converter;
+import com.management.venue.converters.services.Converter;
 import com.management.venue.entites.TimeSlot;
 import com.management.venue.pojo.TimeSlotData;
 import com.management.venue.repositories.VenueRepository;
@@ -18,7 +18,7 @@ import io.micrometer.common.util.StringUtils;
 @Service
 public class ReverseTimeSlotConverter implements Converter<TimeSlotData, TimeSlot> {
 
-	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Autowired
 	protected EncryptionService encryptionService;

@@ -10,7 +10,7 @@ import com.management.venue.utility.EncryptionService;
 
 public abstract class PrimaryDataConverter {
 
-	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
 	@Autowired
 	protected EncryptionService encryptionService;

@@ -6,14 +6,16 @@ import org.springframework.stereotype.Repository;
 
 import com.management.venue.entites.TimeSlot;
 import com.management.venue.exceptions.StapuBoxException;
+import com.management.venue.repositories.service.impl.GenericDaoImpl;
 
 @Repository
-public class TimeSlotRepository extends GenericRepositoryImpl<TimeSlot> {
+public class TimeSlotRepository extends GenericDaoImpl<TimeSlot> {
 
 	public TimeSlotRepository() {
 		super(TimeSlot.class);
 	}
-
+	
+	// Conflict Check Formula: (StartA < EndB) AND (EndA > StartB)
 	public boolean existsOverlap(Long venuePk, LocalDateTime requestedStart, LocalDateTime requestedEnd)
 			throws StapuBoxException {
 		try {
@@ -25,8 +27,7 @@ public class TimeSlotRepository extends GenericRepositoryImpl<TimeSlot> {
 
 			return count > 0;
 		} catch (Exception e) {
-			// Using the 'log' inherited from @Slf4j in the parent (if made protected)
-			// or just throw the custom exception
+			log.error("Error validating time slot availability {}: {}", entityClass.getSimpleName(), e.getMessage(), e);			
 			throw new StapuBoxException("Error validating time slot availability", "500", e);
 		}
 	}
